@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard - Report Issue</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #e8f4f8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #0077b6;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #0077b6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #023e8a;
+        }
+
+        .preview {
+            margin-top: 10px;
+            max-height: 200px;
+            object-fit: contain;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Report a Problem</h2>
+
+    <form id="reportForm">
+        <label for="location">Current Location:</label>
+        <input type="text" id="location" readonly placeholder="Fetching location...">
+
+        <label for="department">Department:</label>
+        <select id="department" required>
+            <option value="">-- Select Department --</option>
+            <option value="electrical">Electrical</option>
+            <option value="civil">Civil</option>
+            <option value="mechanical">Mechanical</option>
+            <option value="food">Food Services</option>
+        </select>
+
+        <label for="image">Upload Image (Gallery/Camera):</label>
+        <input type="file" id="image" accept="image/*" capture="environment" required>
+        <img id="preview" class="preview" alt="Image Preview" />
+
+        <label for="description">Problem Description:</label>
+        <textarea id="description" rows="4" placeholder="Describe the issue..." required></textarea>
+
+        <button type="submit">Submit Issue</button>
+    </form>
+</div>
+
+<script>
+    // Location Access
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const lat = position.coords.latitude.toFixed(5);
+                const lon = position.coords.longitude.toFixed(5);
+                document.getElementById('location').value = `Lat: ${lat}, Lon: ${lon}`;
+            },
+            () => {
+                document.getElementById('location').value = "Location access denied";
+            }
+        );
+    } else {
+        document.getElementById('location').value = "Geolocation not supported";
+    }
+
+    // Image Preview
+    document.getElementById("image").addEventListener("change", function (e) {
+        const preview = document.getElementById("preview");
+        const file = e.target.files[0];
+        if (file) {
+            preview.src = URL.createObjectURL(file);
+            preview.style.display = "block";
+        }
+    });
+
+    // Form Submission
+    document.getElementById("reportForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const dept = document.getElementById("department").value;
+        const desc = document.getElementById("description").value;
+
+        alert(`Query submitted to ${dept} department.\nDescription: ${desc}`);
+
+        // TODO: Send this data to backend if connected
+
+        // Reset form
+        document.getElementById("reportForm").reset();
+        document.getElementById("preview").style.display = "none";
+    });
+</script>
+
+</body>
+</html>
