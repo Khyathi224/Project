@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard - Organization</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #0077b6;
+        }
+
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .card {
+            flex: 1;
+            min-width: 180px;
+            background: #e0f7fa;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .queries {
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background: #0077b6;
+            color: white;
+        }
+
+        button {
+            padding: 6px 12px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .solve-btn {
+            background: #38b000;
+        }
+
+        .solve-btn:hover {
+            background: #1f7a1f;
+        }
+
+        .unsolve-btn {
+            background: #e63946;
+        }
+
+        .unsolve-btn:hover {
+            background: #c1121f;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Admin Dashboard</h2>
+
+    <div class="stats">
+        <div class="card">Total Queries: <strong id="totalQueries">8</strong></div>
+        <div class="card">Solved: <strong id="solvedCount">4</strong></div>
+        <div class="card">Unsolved: <strong id="unsolvedCount">4</strong></div>
+        <div class="card">Users: <strong id="userCount">12</strong></div>
+        <div class="card">Workers: <strong id="workerCount">7</strong></div>
+    </div>
+
+    <div class="queries">
+        <h3>Query List</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Department</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="queryTable">
+                <!-- Dummy data - Replace with backend loop -->
+                <tr>
+                    <td>Q101</td>
+                    <td>Electrical</td>
+                    <td>Fan not working in Lab</td>
+                    <td>Unsolved</td>
+                    <td>
+                        <button class="solve-btn" onclick="markSolved(this)">Mark Solved</button>
+                        <button class="unsolve-btn" onclick="markUnsolved(this)" disabled>Mark Unsolved</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Q102</td>
+                    <td>Civil</td>
+                    <td>Crack in wall near entrance</td>
+                    <td>Solved</td>
+                    <td>
+                        <button class="solve-btn" onclick="markSolved(this)" disabled>Mark Solved</button>
+                        <button class="unsolve-btn" onclick="markUnsolved(this)">Mark Unsolved</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Q103</td>
+                    <td>Food</td>
+                    <td>Canteen hygiene issue</td>
+                    <td>Unsolved</td>
+                    <td>
+                        <button class="solve-btn" onclick="markSolved(this)">Mark Solved</button>
+                        <button class="unsolve-btn" onclick="markUnsolved(this)" disabled>Mark Unsolved</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function markSolved(button) {
+        const row = button.closest("tr");
+        row.cells[3].textContent = "Solved";
+        button.disabled = true;
+        button.nextElementSibling.disabled = false;
+        updateStats();
+        alert("Marked as Solved");
+    }
+
+    function markUnsolved(button) {
+        const row = button.closest("tr");
+        row.cells[3].textContent = "Unsolved";
+        button.disabled = true;
+        button.previousElementSibling.disabled = false;
+        updateStats();
+        alert("Marked as Unsolved");
+    }
+
+    function updateStats() {
+        const rows = document.querySelectorAll("#queryTable tr");
+        let solved = 0, unsolved = 0;
+        rows.forEach(row => {
+            const status = row.cells[3].textContent.trim();
+            if (status === "Solved") solved++;
+            else unsolved++;
+        });
+        document.getElementById("solvedCount").innerText = solved;
+        document.getElementById("unsolvedCount").innerText = unsolved;
+        document.getElementById("totalQueries").innerText = rows.length;
+    }
+
+    updateStats();
+</script>
+
+</body>
+</html>
