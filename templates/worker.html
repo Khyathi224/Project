@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Worker Dashboard - Assigned Issues</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #0077b6;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+            display: block;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background: #0077b6;
+            color: white;
+        }
+
+        button {
+            padding: 6px 12px;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+
+        .resolve-btn {
+            background: #38b000;
+        }
+
+        .resolve-btn:hover {
+            background: #1f7a1f;
+        }
+
+        .pending-btn {
+            background: #e63946;
+        }
+
+        .pending-btn:hover {
+            background: #c1121f;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Worker Dashboard</h2>
+
+    <label for="deptSelect">Select Your Department:</label>
+    <select id="deptSelect" onchange="filterByDepartment()">
+        <option value="all">All Departments</option>
+        <option value="electrical">Electrical</option>
+        <option value="civil">Civil</option>
+        <option value="mechanical">Mechanical</option>
+        <option value="food">Food Services</option>
+    </select>
+
+    <table id="issuesTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Department</th>
+                <th>Issue</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dummy Issues -->
+            <tr data-dept="electrical">
+                <td>W201</td>
+                <td>Electrical</td>
+                <td>Light flickering in Block A</td>
+                <td>Pending</td>
+                <td>
+                    <button class="resolve-btn" onclick="resolveIssue(this)">Mark Resolved</button>
+                    <button class="pending-btn" onclick="markPending(this)" disabled>Mark Pending</button>
+                </td>
+            </tr>
+            <tr data-dept="civil">
+                <td>W202</td>
+                <td>Civil</td>
+                <td>Broken tile in corridor</td>
+                <td>Pending</td>
+                <td>
+                    <button class="resolve-btn" onclick="resolveIssue(this)">Mark Resolved</button>
+                    <button class="pending-btn" onclick="markPending(this)" disabled>Mark Pending</button>
+                </td>
+            </tr>
+            <tr data-dept="mechanical">
+                <td>W203</td>
+                <td>Mechanical</td>
+                <td>AC not cooling in Seminar Hall</td>
+                <td>Resolved</td>
+                <td>
+                    <button class="resolve-btn" onclick="resolveIssue(this)" disabled>Mark Resolved</button>
+                    <button class="pending-btn" onclick="markPending(this)">Mark Pending</button>
+                </td>
+            </tr>
+            <tr data-dept="food">
+                <td>W204</td>
+                <td>Food Services</td>
+                <td>Spillage in mess area</td>
+                <td>Pending</td>
+                <td>
+                    <button class="resolve-btn" onclick="resolveIssue(this)">Mark Resolved</button>
+                    <button class="pending-btn" onclick="markPending(this)" disabled>Mark Pending</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function filterByDepartment() {
+        const selectedDept = document.getElementById("deptSelect").value;
+        const rows = document.querySelectorAll("#issuesTable tbody tr");
+
+        rows.forEach(row => {
+            const dept = row.getAttribute("data-dept");
+            if (selectedDept === "all" || selectedDept === dept) {
+                row.classList.remove("hidden");
+            } else {
+                row.classList.add("hidden");
+            }
+        });
+    }
+
+    function resolveIssue(button) {
+        const row = button.closest("tr");
+        row.cells[3].textContent = "Resolved";
+        button.disabled = true;
+        button.nextElementSibling.disabled = false;
+        alert("Issue marked as resolved.");
+    }
+
+    function markPending(button) {
+        const row = button.closest("tr");
+        row.cells[3].textContent = "Pending";
+        button.disabled = true;
+        button.previousElementSibling.disabled = false;
+        alert("Issue marked as pending.");
+    }
+</script>
+
+</body>
+</html>
